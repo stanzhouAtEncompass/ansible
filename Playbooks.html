@@ -1,0 +1,543 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Chapter 2: Ansible Playbooks · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="Architecture.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="Architecture.html">
+            
+                <a href="Architecture.html">
+            
+                    
+                    Chapter 1: Ansible Architecure and Design
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="Playbooks.html">
+            
+                <a href="Playbooks.html">
+            
+                    
+                    Chapter 2: Ansible Playbooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Chapter 2: Ansible Playbooks</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="ansible-playbooks">Ansible Playbooks</h1>
+<h2 id="yaml">YAML</h2>
+<ul>
+<li>YAML is a data-oriented language, as a human readable, data-serialisation lanuage</li>
+<li>Easy to use, easy to read, great for collaboration</li>
+<li>Reading and writing of YAML, supported in most major programming languages</li>
+<li>Often seen with a .yaml or .yaml extension, .yaml is officially the recommended extension since 2006<h3 id="qutoes">qutoes</h3>
+<strong>only the double quotes will be work</strong>, eg:
+``` bash
+$ cat test.yaml <h1 id="every-yaml-file-should-start-with-three-dashes">Every YAML file should start with three dashes</h1>
+</li>
+</ul>
+<hr>
+<p>no_quotes: this is a string example\n
+double_quotes: &quot;this is a string example\n&quot;
+single_quotes: &apos;this is a string example\n&apos;</p>
+<h1 id="every-yaml-file-should-end-with-three-dots">Every YAML file should end with three dots</h1>
+<p>...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/04$ ./show_yaml_python.sh 
+{&apos;double_quotes&apos;: &apos;this is a string example\n&apos;,
+ &apos;no_quotes&apos;: &apos;this is a string example\n&apos;,
+ &apos;single_quotes&apos;: &apos;this is a string example\n&apos;}</p>
+<pre><code>### multiple lines
+``` bash
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/05$ cat test.yaml 
+# Every YAML file should start with three dashes
+---
+
+example_key_1: |
+  this is a string
+  that goes over
+  multiple lines
+
+# Every YAML file should end with three dots
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/05$ ./show_yaml_python.sh 
+{&apos;example_key_1&apos;: &apos;this is a string\nthat goes over\nmultiple lines\n&apos;}
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/05$ python3
+Python 3.8.10 (default, Nov 26 2021, 20:14:08) 
+[GCC 9.3.0] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; print(&apos;this is a string\nthat goes over\nmultiple lines\n&apos;)
+this is a string
+that goes over
+multiple lines
+</code></pre><h3 id="greater-then-signto-use-multi-plines-in-yaml-to-represent-as-a-single-ine-in-both-ansible-and-python">greater then sign(to use multi plines in YAML to represent as a single ine in both ansible and python)</h3>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/06$ cat test.yaml 
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+---
+
+example_key_1: &gt;
+  this is a string
+  that goes over
+  multiple lines
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/06$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_key_1&apos;</span>: <span class="hljs-string">&apos;this is a string that goes over multiple lines\n&apos;</span>}
+</code></pre>
+<h3 id="greater-then-sign-with-an-additional-minus">greater then sign with an additional minus</h3>
+<p>removed the ending carriage return</p>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/07$ cat test.yaml 
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+---
+
+example_key_1: &gt;-
+  this is a string
+  that goes over
+  multiple lines
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/07$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_key_1&apos;</span>: <span class="hljs-string">&apos;this is a string that goes over multiple lines&apos;</span>}
+</code></pre>
+<h3 id="integer">integer</h3>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/08$ cat test.yaml 
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+---
+
+example_<span class="hljs-built_in">integer</span>: 1
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/08$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_integer&apos;</span>: 1}
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/08$ python3
+Python 3.8.10 (default, Nov 26 2021, 20:14:08) 
+[GCC 9.3.0] on linux
+Type <span class="hljs-string">&quot;help&quot;</span>, <span class="hljs-string">&quot;copyright&quot;</span>, <span class="hljs-string">&quot;credits&quot;</span> or <span class="hljs-string">&quot;license&quot;</span> <span class="hljs-keyword">for</span> more information.
+&gt;&gt;&gt; myvar = {<span class="hljs-string">&apos;example_integer&apos;</span>: 1}
+&gt;&gt;&gt; <span class="hljs-built_in">print</span>(myvar[<span class="hljs-string">&apos;example_integer&apos;</span>])
+1
+&gt;&gt;&gt; <span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(myvar[<span class="hljs-string">&apos;example_integer&apos;</span>]))
+&lt;class <span class="hljs-string">&apos;int&apos;</span>&gt;
+</code></pre>
+<p>If we quote the integer value, it makes it into a string rather than an integer.</p>
+<h3 id="booleans">booleans</h3>
+<p>YAML is very versatile with how it can handle booleans
+go for a clear true or false with a capital letter and lowercase.</p>
+<h3 id="list-items">List items</h3>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/11$ cat test.yaml 
+---
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+
+- item 1
+- item 2
+- item 3
+- item 4
+- item 5
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/11$ ./show_yaml_python.sh 
+[<span class="hljs-string">&apos;item 1&apos;</span>, <span class="hljs-string">&apos;item 2&apos;</span>, <span class="hljs-string">&apos;item 3&apos;</span>, <span class="hljs-string">&apos;item 4&apos;</span>, <span class="hljs-string">&apos;item 5&apos;</span>]
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/11$ python3
+Python 3.8.10 (default, Nov 26 2021, 20:14:08) 
+[GCC 9.3.0] on linux
+Type <span class="hljs-string">&quot;help&quot;</span>, <span class="hljs-string">&quot;copyright&quot;</span>, <span class="hljs-string">&quot;credits&quot;</span> or <span class="hljs-string">&quot;license&quot;</span> <span class="hljs-keyword">for</span> more information.
+&gt;&gt;&gt; myvar = [<span class="hljs-string">&apos;item 1&apos;</span>, <span class="hljs-string">&apos;item 2&apos;</span>, <span class="hljs-string">&apos;item 3&apos;</span>, <span class="hljs-string">&apos;item 4&apos;</span>, <span class="hljs-string">&apos;item 5&apos;</span>]
+&gt;&gt;&gt; <span class="hljs-built_in">print</span> (myvar)
+[<span class="hljs-string">&apos;item 1&apos;</span>, <span class="hljs-string">&apos;item 2&apos;</span>, <span class="hljs-string">&apos;item 3&apos;</span>, <span class="hljs-string">&apos;item 4&apos;</span>, <span class="hljs-string">&apos;item 5&apos;</span>]
+&gt;&gt;&gt; <span class="hljs-built_in">print</span> (myvar[0])
+item 1
+&gt;&gt;&gt; <span class="hljs-built_in">print</span> (myvar[1])
+item 2
+</code></pre>
+<h3 id="dictionary">Dictionary</h3>
+<p>Whatever comes after the colon is treated as the value, any subsequent entries are treated as the same dictionary.</p>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/12$ cat test.yaml 
+---
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+
+example_key_1: example_value_1
+example_key_2: example_value_2
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/12$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_key_1&apos;</span>: <span class="hljs-string">&apos;example_value_1&apos;</span>, <span class="hljs-string">&apos;example_key_2&apos;</span>: <span class="hljs-string">&apos;example_value_2&apos;</span>}
+</code></pre>
+<h3 id="indentation">Indentation</h3>
+<p>is part of the YAML language and a two character indentation is a common practice for Ansible and other uses of YAML.</p>
+<h3 id="dictionary-of-dictionary">Dictionary of Dictionary</h3>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/17$ cat test.yaml 
+---
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+
+example_key_1:
+  sub_example_key1: sub_example_value1
+
+example_key_2:
+  sub_example_key2: sub_example_value2
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/17$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_key_1&apos;</span>: {<span class="hljs-string">&apos;sub_example_key1&apos;</span>: <span class="hljs-string">&apos;sub_example_value1&apos;</span>},
+ <span class="hljs-string">&apos;example_key_2&apos;</span>: {<span class="hljs-string">&apos;sub_example_key2&apos;</span>: <span class="hljs-string">&apos;sub_example_value2&apos;</span>}}
+</code></pre>
+<h3 id="a-dictionary-key-have-a-list-of-values">A dictionary key have a list of values</h3>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/18$ cat test.yaml 
+---
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+
+example_1: 
+  - item_1
+  - item_2
+  - item_3
+
+example_2: 
+  - item_4
+  - item_5
+  - item_6
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/18$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_1&apos;</span>: [<span class="hljs-string">&apos;item_1&apos;</span>, <span class="hljs-string">&apos;item_2&apos;</span>, <span class="hljs-string">&apos;item_3&apos;</span>],
+ <span class="hljs-string">&apos;example_2&apos;</span>: [<span class="hljs-string">&apos;item_4&apos;</span>, <span class="hljs-string">&apos;item_5&apos;</span>, <span class="hljs-string">&apos;item_6&apos;</span>]}
+</code></pre>
+<h3 id="a-list-of-dictionaries-consisting-of-a-list-of-iteams">A list of dictionaries, consisting of a list of iteams</h3>
+<pre><code class="lang-bash">ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/19$ cat test.yaml 
+---
+<span class="hljs-comment"># Every YAML file should start with three dashes</span>
+
+example_dictionary_1:
+  - example_dictionary_2:
+    - 1
+    - 2
+    - 3
+  - example_dictionary_3:
+    - 4
+    - 5
+    - 6
+  - example_dictionary_4:
+    - 7
+    - 8
+    - 9
+
+<span class="hljs-comment"># Every YAML file should end with three dots</span>
+...
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/YAML/19$ ./show_yaml_python.sh 
+{<span class="hljs-string">&apos;example_dictionary_1&apos;</span>: [{<span class="hljs-string">&apos;example_dictionary_2&apos;</span>: [1, 2, 3]},
+                          {<span class="hljs-string">&apos;example_dictionary_3&apos;</span>: [4, 5, 6]},
+                          {<span class="hljs-string">&apos;example_dictionary_4&apos;</span>: [7, 8, 9]}]}
+</code></pre>
+<h2 id="resources">Resources</h2>
+<p>Useful references</p>
+<ul>
+<li><a href="http://yaml.org/spec/1.2/spec.html" target="_blank">YAML Specification</a> </li>
+<li>Other options for working with multi line input/output in YAML
+<a href="https://stackoverflow/com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multipe-lines" target="_blank">https://stackoverflow/com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multipe-lines</a> </li>
+</ul>
+<h3 id="curly-brackets-vars">curly brackets vars</h3>
+<p>The curly brackets are part of the Jinja2 templating system for variables</p>
+<pre><code class="lang-bash">cat motd_playbook.yaml 
+---
+<span class="hljs-comment"># YAML documents begin with the document separator ---</span>
+
+<span class="hljs-comment"># The minus in YAML this indicates a list item.  The playbook contains a list </span>
+<span class="hljs-comment"># of plays, with each play being a dictionary</span>
+-
+
+  <span class="hljs-comment"># Hosts: where our play will run and options it will run with</span>
+  hosts: centos
+  user: root
+  gather_facts: False
+
+  <span class="hljs-comment"># Vars: variables that will apply to the play, on all target systems</span>
+  vars:
+    motd: <span class="hljs-string">&quot;Welcome to CentOS Linux - Ansible Rocks\n&quot;</span>
+
+  <span class="hljs-comment"># Tasks: the list of tasks that will be executed within the playbook</span>
+  tasks:
+    - name: Configure a MOTD (message of the day)
+      copy:
+        content: <span class="hljs-string">&quot;{{ motd }}&quot;</span>
+        dest: /etc/motd
+
+  <span class="hljs-comment"># Handlers: the list of handlers that are executed as a notify key from a task</span>
+
+  <span class="hljs-comment"># Roles: list of roles to be imported into the play</span>
+
+<span class="hljs-comment"># Three dots indicate the end of a YAML document</span>
+...
+</code></pre>
+<h3 id="varible-can-pass-by-command-line">varible can pass by command line</h3>
+<p><code>-e</code> or the <code>--extra-vars</code>
+<code>ansible-playbook motd_playbook.yaml -e &apos;motd=&quot;testing the mod playbook\n&quot;&apos;</code></p>
+<h3 id="handlers">handlers</h3>
+<p>Handlers follow the same syntax as taks, are called from the task section through the use of the motified key within a task</p>
+<pre><code class="lang-bash">$ cat motd_playbook.yaml 
+---
+<span class="hljs-comment"># YAML documents begin with the document separator ---</span>
+
+<span class="hljs-comment"># The minus in YAML this indicates a list item.  The playbook contains a list </span>
+<span class="hljs-comment"># of plays, with each play being a dictionary</span>
+-
+
+  <span class="hljs-comment"># Hosts: where our play will run and options it will run with</span>
+  hosts: centos
+  user: root
+  gather_facts: False
+
+  <span class="hljs-comment"># Vars: variables that will apply to the play, on all target systems</span>
+  vars:
+    motd: <span class="hljs-string">&quot;Welcome to CentOS Linux - Ansible Rocks\n&quot;</span>
+
+  <span class="hljs-comment"># Tasks: the list of tasks that will be executed within the playbook</span>
+  tasks:
+    - name: Configure a MOTD (message of the day)
+      copy:
+        content: <span class="hljs-string">&quot;{{ motd }}&quot;</span>
+        dest: /etc/motd
+      notify: MOTD changed
+
+  <span class="hljs-comment"># Handlers: the list of handlers that are executed as a notify key from a task</span>
+  handlers:
+    - name: MOTD changed
+      debug:
+        msg: The MOTD was changed
+
+  <span class="hljs-comment"># Roles: list of roles to be imported into the play</span>
+
+<span class="hljs-comment"># Three dots indicate the end of a YAML document</span>
+...
+</code></pre>
+<h3 id="resources">Resources</h3>
+<ul>
+<li>Playbooks Keywords
+<a href="https://docs.ansible.com/ansible/2.4/playbooks_keywords.html" target="_blank">https://docs.ansible.com/ansible/2.4/playbooks_keywords.html</a></li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="Architecture.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Chapter 1: Ansible Architecure and Design">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Chapter 2: Ansible Playbooks","level":"1.3","depth":1,"previous":{"title":"Chapter 1: Ansible Architecure and Design","level":"1.2","depth":1,"path":"Architecture.md","ref":"Architecture.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Playbooks.md","mtime":"2022-03-06T11:43:39.870Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-03-06T11:51:08.733Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
